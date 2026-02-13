@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Forgive me? 🥺</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffebee;
+            font-family: 'Comic Sans MS', cursive;
+            text-align: center;
+            overflow: hidden; /* Prevents scrolling when button moves */
+            touch-action: manipulation;
+        }
+        #cat-img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 { color: #d32f2f; font-size: 1.5rem; padding: 0 20px; }
+        
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 150px;
+            position: relative;
+        }
+
+        button {
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        #yes-btn { background-color: #4caf50; color: white; position: relative; z-index: 5; }
+        
+        #no-btn {
+            background-color: #f44336;
+            color: white;
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="status">Can you take me(Nijat) out of blacklist PLZ</h1>
+    <img id="cat-img" src="https://pbs.twimg.com/media/EAmr-PAWsAEoiWR?format=jpg&name=small" alt="cat">
+
+    <div class="btn-container" id="main-buttons">
+        <button id="yes-btn" onclick="celebrate()">Yes (I forgive you)</button>
+        <button id="no-btn" id="no-btn">No</button>
+    </div>
+
+    <script>
+        const catImg = document.getElementById('cat-img');
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const statusText = document.getElementById('status');
+        const btnContainer = document.getElementById('main-buttons');
+
+        const sadCat = "https://pbs.twimg.com/media/EAmr-PAWsAEoiWR?format=jpg&name=small";
+        const happyCat = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxo627yI35KRU-ZnVaGYhZKT3tEaVpg639xw&s";
+        const danceCat = "https://preview.redd.it/okaruns-happy-happy-cat-v0-gsrkewd1az8f1.gif?width=360&auto=webp&s=fb96a1b9b60fa29bd01c89d61957d3d9a950e729";
+        const formspreeID = "xeelawwg"; 
+
+        function moveButton() {
+            noBtn.style.position = "fixed"; // Uses screen coordinates
+            
+            // Calculate safe zones so it doesn't go off edge
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            
+            const maxX = window.innerWidth - btnWidth - 20;
+            const maxY = window.innerHeight - btnHeight - 20;
+
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+
+            noBtn.style.left = `${newX}px`;
+            noBtn.style.top = `${newY}px`;
+        }
+
+        // Teleport on Hover (PC)
+        noBtn.addEventListener('mouseover', moveButton);
+        
+        // Teleport on Touch/Click (Mobile)
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        // Hover effect for Yes
+        yesBtn.addEventListener('mouseover', () => { 
+            if(statusText.innerHTML === "Can you take me(Nijat) out of blacklist PLZ") catImg.src = happyCat; 
+        });
+        yesBtn.addEventListener('mouseleave', () => { 
+            if(statusText.innerHTML === "Can you take me(Nijat) out of blacklist PLZ") catImg.src = sadCat; 
+        });
+
+        function celebrate() {
+            statusText.innerHTML = "YAYYYYYYYY! YOU WILL NOT REGRETTTT 🥳";
+            catImg.src = danceCat;
+            catImg.style.width = "80%";
+            catImg.style.height = "auto";
+            
+            // Clear everything
+            btnContainer.style.display = 'none';
+            document.body.style.backgroundColor = "#ffcdd2";
+
+            // CONFETTI!
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Email Notification
+            fetch(`https://formspree.io/f/${formspreeID}`, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: "VICTORY: She clicked Yes!" })
+            });
+        }
+    </script>
+</body>
+</html>
